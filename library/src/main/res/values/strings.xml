@@ -1,0 +1,101 @@
+<resources>
+    <string name="ui_progress_dialog_default_message">正在加载 ...</string>
+    <string name="ui_progress_dialog_location_message">正在定位 ...</string>
+    <string name="ui_network_not_avaiable">网络无法连接</string>
+
+    <string name="ui_progressbar_dialog_default_message">正在读取卡片信息 ...</string>
+    <string name="ui_progressbar_dialog_default_progress">0%</string>
+
+    <string name="ui_certain">确定</string>
+    <string name="ui_cancel">取消</string>
+    <string name="ui_retry">重试</string>
+    <string name="ui_yes">是</string>
+    <string name="ui_no">否</string>
+    <string name="ui_back">返回</string>
+
+    <string name="day_name_format">E</string>
+    <string name="invalid_date">Date must be between %1$s and %2$s.</string>
+    <string name="month_name_format">yyyy年M月</string>
+
+    <string name="ui_email_error">请输入正确的邮箱</string>
+
+    <!--pattern-->
+    <string name="lockscreen_access_pattern_start">"开始绘制图案"</string>
+    <string name="lockscreen_access_pattern_cleared">"图案已清除"</string>
+    <string name="lockscreen_access_pattern_cell_added">"已添加单元格"</string>
+    <string name="lockscreen_access_pattern_detected">"图案绘制完成"</string>
+    <!--pattern结束-->
+
+    <!--自定义下拉刷新上滑加载ListView-->
+    <string name="xlistview_header_hint_normal">下拉刷新</string>
+    <string name="xlistview_header_hint_ready">松开刷新数据</string>
+    <string name="xlistview_header_hint_loading">正在加载...</string>
+    <string name="xlistview_header_last_time">上次更新时间：</string>
+    <string name="xlistview_footer_hint_normal">查看更多</string>
+    <string name="xlistview_footer_hint_ready">松开载入更多</string>
+
+    <!--倒计时输入框-->
+    <string name="ui_get_verifycode">获取验证码</string>
+    <string name="ui_input_your_verifycode">请输入验证码</string>
+    <string name="ui_SMS_verifyCode">短信验证码</string>
+    <string name="ui_count_prompt">(%d秒后)重新获取</string>
+    <string name="ui_count_prompt2">%d秒</string>
+    <string name="again_send">重新发送</string>
+
+    <string name="complete">完成</string>
+    <string name="card_end_num_title">卡背面末位三位数字</string>
+    <string name="card_end_num_bottom">标注在信用卡背面的最后三位数字</string>
+
+    <!-- 上拉刷新，下拉加载 -->
+    <string name="pull_to_load_pull_label">向上滑动加载更多…</string>
+    <string name="pull_to_load_release_label">松手加载更多…</string>
+    <string name="pull_to_load_tap_label">点击刷新…</string>
+    <string name="pull_to_load_loading_label">努力加载中…</string>
+    <string name="pull_to_refresh_pull_label">向下滑动刷新…</string>
+    <string name="pull_to_refresh_release_label">松手刷新…</string>
+    <string name="pull_to_refresh_tap_label">点击刷新…</string>
+    <string name="pull_to_refresh_refreshing_label">努力加载中…</string>
+
+
+
+    <!-- 高德地图mapey -->
+    <string name="lakala_map_key">1557766abd1c0c689304a34236065547a118cbaf1c1b55f2424be28bc9c5c0d7c34ac11981629242</string>
+    <!--底部弹出选择器-->
+    <string name="pickerview_cancel">取消</string>
+    <string name="pickerview_submit">确定</string>
+    <string name="pickerview_year">年</string>
+    <string name="pickerview_month">月</string>
+    <string name="pickerview_day">日</string>
+    <string name="pickerview_hours">时</string>
+    <string name="pickerview_minutes">分</string>
+    <string name="pickerview_seconds">秒</string>
+    <!--底部弹出选择器-->
+
+    <!--考拉信用分详情  五维图界面-->
+    <string name="title_Performance">履约能力</string>
+    <string name="title_CreditRecord">信用记录</string>
+    <string name="title_Society">社交关系</string>
+    <string name="title_Trans">交易行为</string>
+    <string name="title_degree">身份属性</string>
+
+
+    <!--考拉信用分详情 PopupWindow界面-->
+    <string name="text_Performance">综合健康评分、社保公积金缴纳、动产及不动产等信息，来判断你的履约能力</string>
+    <string name="text_CreditRecord">是指你过往额履约记录，失信行为将带来负面影响，而丰富的履约记录将获得更高的评分</string>
+    <string name="text_Society">你在人际来往中的影响力及好友信用状况</string>
+    <string name="text_Trans">包括你购物、缴费、转账等活动行为</string>
+    <string name="text_degree">你真实的学习及职业经理信息，以及实名的消费行为（如：本人的手环消费、机票、酒店、保险等消费）</string>
+
+    <!--下拉刷新布局-->
+    <string name="pull_to_refresh">下拉刷新</string>
+    <string name="release_to_refresh">释放立即刷新</string>
+    <string name="refreshing">正在刷新...</string>
+    <string name="refresh_succeed">刷新成功</string>
+    <string name="refresh_fail">刷新失败</string>
+    <string name="pullup_to_load">上拉加载更多</string>
+    <string name="release_to_load">释放立即加载</string>
+    <string name="loading1">正在加载...</string>
+    <string name="load_succeed">加载成功</string>
+    <string name="load_fail">加载失败</string>
+
+</resources>

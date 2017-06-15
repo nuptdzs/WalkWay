@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_88"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:weightSum="1"
+        android:layout_marginLeft="@dimen/dimen_20"
+        android:layout_marginRight="@dimen/dimen_20"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_corner_light"
+            android:layout_weight="1"
+            android:layout_marginRight="@dimen/dimen_20"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="@color/color_gray_3b4255"
+                android:textSize="@dimen/dimen_26"
+                android:gravity="center"
+                android:paddingLeft="16dp"
+                android:text="验证码"/>
+            <com.lakala.ui.component.ClearEditTextLogin
+                android:inputType="number"
+                android:id="@+id/plat_activity_input_verifycode_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="@dimen/dimen_26"
+                android:background="@null"
+                android:textColor="@color/color_gray_3b4255"
+                android:textColorHint="@color/color_white_8c8fa3"
+                android:layout_margin="@dimen/dimen_4"
+                android:paddingLeft="@dimen/dimen_20"
+                android:paddingRight="@dimen/dimen_20"
+                android:layout_weight="1"
+                android:hint="@string/ui_input_your_verifycode"/>
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/plat_activity_input_get_verifycode_button"
+            android:layout_width="@dimen/dimen_264"
+            android:layout_height="match_parent"
+            android:textColor="#59c1fb"
+            android:background="@drawable/ui_btn_bodor_green_white_selector"
+            android:textSize="@dimen/dimen_26"
+            android:text="@string/ui_get_verifycode" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">WalkWayApp</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="wallet">支付</string>
+    <string name="life">生活</string>
+    <string name="fin">理财</string>
+    <string name="person">我的</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_regist">RegistActivity</string>
+    <string name="search">搜索</string>
+    <string name="hint_login_pwd">plz enter password</string>
+    <string name="login">login</string>
+    <string name="hint_login_name">please enter phone number</string>
+    <string name="hint_regist_phone">register phone number</string>
+    <string name="hint_sms_code">please enter verify code</string>
+    <string name="register">regist</string>
+    <string name="forget_password">forget password?</string>
+    <string name="message">message</string>
+    <string name="goal">goal</string>
+    <string name="personInfo">personInfo</string>
+    <string name="text_my_score">MyScore</string>
+    <string name="text_my_honor">MyHonors</string>
+    <string name="logout">logout</string>
+</resources>
