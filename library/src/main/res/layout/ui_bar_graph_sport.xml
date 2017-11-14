@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <com.zk.library.common.ui.BooheeScrollView
+        android:id="@+id/ui_id_bar_graph_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="90dip"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/ui_id_bar_graph_content_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:gravity="bottom"
+            android:orientation="horizontal" />
+    </com.zk.library.common.ui.BooheeScrollView>
+
+    <RelativeLayout
+        android:id="@+id/select_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ui_id_bar_graph_scroll_view"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <!--<RelativeLayout-->
+        <!--android:id="@+id/select_index_layout"-->
+        <!--android:layout_width="30dip"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<View-->
+        <!--android:id="@+id/select_bg_view"-->
+        <!--android:layout_width="30dip"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:background="@drawable/ui_bargraph_select_bg" />-->
+
+        <ImageView
+            android:id="@+id/select_iamge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/icon_sport_green" />
+
+        <!--</RelativeLayout>-->
+
+        <TextView
+            android:id="@+id/select_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/select_iamge"
+            android:layout_centerHorizontal="true"
+            android:text=""
+            android:textSize="10sp"
+            android:textColor="#8c8fa3" />
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

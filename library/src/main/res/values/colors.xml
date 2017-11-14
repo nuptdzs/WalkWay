@@ -227,10 +227,11 @@
     <!--覆盖颜色-->
     <color name="bgColor_overlay">#60000000</color>
     <color name="color_green_1ef8b0">#1ef8b0</color>
-    <color name="themeColor">#3b4256</color>
-    <color name="themeColorLight">#53596b</color>
+    <color name="themeColor">#223d60</color>
+    <color name="themeColorLight">#2e3754</color>
 
     <!--<color name="picker_line_border">#e5e5e5</color>-->
     <color name="picker_line_border">#00afec</color>
+    <color name="color_sport_49efa6">#49efa6</color>
 
 </resources>

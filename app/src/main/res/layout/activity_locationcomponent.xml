@@ -1,0 +1,21 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+     >
+
+     <EditText 
+         android:id="@+id/location_keywords"
+         android:layout_width="match_parent"
+         android:layout_height="35dp"
+         android:hint="支持1—5个关键词，用逗号分隔"
+         android:textSize="12sp"
+         android:singleLine="true"/>
+    <WebView 
+        android:id="@+id/location_WebView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    
+
+</LinearLayout>

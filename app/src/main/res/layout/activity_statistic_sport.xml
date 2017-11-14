@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:CircleIndicator="http://schemas.android.com/apk/res-auto"
+    xmlns:pv="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/themeColor"
+    android:orientation="vertical">
+
+
+    <FrameLayout
+        android:id="@+id/sport_top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.Toolbar>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_162"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="25dp" />
+
+            <RadioGroup
+                android:id="@+id/date_layout"
+                android:layout_width="225dip"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <RadioButton
+                    android:id="@+id/item_day"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/tab_left_white_bg"
+                    android:button="@null"
+                    android:checked="true"
+                    android:gravity="center"
+                    android:paddingBottom="2dp"
+                    android:paddingTop="2dp"
+                    android:text="day"
+                    android:textColor="@color/text_white_gray_selector"
+                    android:textSize="@dimen/dimen_26" />
+
+                <RadioButton
+                    android:id="@+id/item_week"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/tab_middle_white_bg"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:paddingBottom="2dp"
+                    android:paddingTop="2dp"
+                    android:text="week"
+                    android:textColor="@color/text_white_gray_selector"
+                    android:textSize="@dimen/dimen_26" />
+
+                <RadioButton
+                    android:id="@+id/item_month"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/tab_right_white_bg"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:paddingBottom="2dp"
+                    android:paddingTop="2dp"
+                    android:text="month"
+                    android:textColor="@color/text_white_gray_selector"
+                    android:textSize="@dimen/dimen_26" />
+            </RadioGroup>
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <!--<TextView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="@dimen/dimen_65"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:background="@drawable/ui_bargraph_bottom_bg" />-->
+
+    <LinearLayout
+        android:id="@+id/ll_center_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sport_top_layout"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/sport_day_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="30dip"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:visibility="visible" />
+
+
+        <!--<include layout="@layout/item_sport_sleep">/</include>-->
+        <com.zk.walkwayapp.view.viewpager.ParallaxViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="220dip"
+            android:cacheColorHint="#00000000"
+            android:fadingEdge="none"
+            pv:interpolator="@anim/decelerate_interpolator"
+            pv:outset="62%"
+            pv:px_mode="right_overlay"
+            pv:shadow_width="0dp" />
+
+        <com.zk.walkwayapp.view.circleIndicator.CircleIndicator
+            android:id="@+id/indicator"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            CircleIndicator:ci_background="#929596"
+            CircleIndicator:ci_gravity="center"
+            CircleIndicator:ci_margin="9dp"
+            CircleIndicator:ci_mode="outside"
+            CircleIndicator:ci_radius="3dp"
+            CircleIndicator:ci_selected_background="0xff3dc187" />
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/ll_center_layout"
+        android:layout_marginBottom="50dip">
+
+        <com.zk.library.common.ui.module.holographlibrary.BarGraph
+            android:id="@+id/mBargraph"
+            android:layout_width="match_parent"
+            android:layout_height="130dip"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom" />
+
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:background="@drawable/sport_bottom_gient" />-->
+
+    </RelativeLayout>
+
+</RelativeLayout>
+
+
+
+

@@ -4,16 +4,16 @@ package com.zk.api.weather;
  * the result of the API for getting WeatherInfo
  */
 public class WeatherResult {
-    private WeatherLocation location;
+    private WeatherLocation basic;
     private WeatherInfo now;
-    private String last_update;
+    private String status;
 
-    public WeatherLocation getLocation() {
-        return location;
+    public WeatherLocation getBasic() {
+        return basic;
     }
 
-    public void setLocation(WeatherLocation location) {
-        this.location = location;
+    public void setBasic(WeatherLocation basic) {
+        this.basic = basic;
     }
 
     public WeatherInfo getNow() {
@@ -24,11 +24,20 @@ public class WeatherResult {
         this.now = now;
     }
 
-    public String getLast_update() {
-        return last_update;
+    public String getStatus() {
+        return status;
     }
 
-    public void setLast_update(String last_update) {
-        this.last_update = last_update;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "WeatherResult{" +
+                "basic=" + basic +
+                ", now=" + now +
+                ", status='" + status + '\'' +
+                '}';
     }
 }

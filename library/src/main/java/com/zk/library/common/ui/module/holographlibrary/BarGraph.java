@@ -23,8 +23,6 @@ import java.util.ArrayList;
 
 /**
  * 绘制柱状图
- * <p/>
- * Created by jerry on 14-2-8.
  */
 public class BarGraph extends LinearLayout {
 

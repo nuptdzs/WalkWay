@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical|right" >
 
-        <com.lakala.ui.component.LineShape
+        <com.zk.library.common.ui.LineShape
             android:id="@+id/right_line"
             android:layout_width="3dp"
             android:layout_height="fill_parent"

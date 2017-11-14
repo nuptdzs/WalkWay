@@ -12,6 +12,7 @@
         android:layout_height="100dp"
         android:layout_gravity="center_horizontal"
         android:layout_margin="@dimen/big_padding"
+        android:src="@mipmap/plusbutton_gps_selected"
         />
 
     <LinearLayout

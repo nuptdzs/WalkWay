@@ -1,0 +1,578 @@
+
+开发人员指南
+
+Google Maps Directions API 是一项利用 HTTP 请求计算位置间路线的服务。
+
+该服务还作为客户端 Google Maps JavaScript API 的一部分提供，或者在服务器端与 Java Client、Python Client、Go Client 以及 Node.js Client for Google Maps Services 配合使用。注：无论您如何使用服务，都适用相同的每日使用限额。每日请求次数按客户端与服务器端查询次数之和计算。
+本文档的适用对象是想要在其中一个 Google Maps API 提供的地图内计算路线数据的网站和移动开发者。它介绍了 API 使用方法，并提供了有关可用参数的参考资料。
+
+简介
+
+这段视频介绍了如何利用 Google Maps Directions API 来帮助用户找到方向。视频就如何在移动应用中使用该 API 时通过服务器代理该 Web 服务来保护您的 API 密钥提供了建议。
+
+
+您可以利用 Directions API：
+
+搜索包括公共交通、驾车、步行或骑行在内的几种交通模式的路线。
+通过一系列路径点返回多段式路线。
+以文本字符串（例如：“Chicago, IL”或“Darwin, NT, Australia”）、纬度/经度坐标或者地点 ID 形式指定起点、目的地和路径点。
+计算路线是一项耗费时间和资源的任务。请尽一切可能事先计算已知地址（利用本文介绍的服务），并将结果存储在您自己设计的临时缓存内。
+
+注：此服务无法实时响应用户输入。如需了解有关动态路线计算（例如，用户界面元素内的计算）的信息，请查阅 Google Maps JavaScript API Directions Service 的文档。
+
+在开始使用 Directions API 进行开发前，请查看身份验证要求（需要 API 密钥）和 API 使用限额。
+
+路线请求
+
+Google Maps Directions API 请求使用以下格式：
+
+https://maps.googleapis.com/maps/api/directions/outputFormat?parameters
+其中 outputFormat 可以是以下值之一：
+
+json（推荐）指示以 JavaScript 对象标记 (JSON) 输出
+xml 指示以 XML 格式输出
+注：网址必须编码正确方有效，并且对于所有网络服务，均有 8192 字符数限制。请在构建网址时注意这一限制。
+
+HTTPS 或 HTTP
+
+安全性很重要，建议尽可能使用 HTTPS，对于请求中包含用户位置等敏感用户数据的应用，更须如此。使用 HTTPS 加密可提高应用的安全性及其抵御窥探或篡改的能力。
+
+如果 HTTPS 不可行，需要通过 HTTP 访问 Google Maps Directions API，请使用：
+
+http://maps.googleapis.com/maps/api/directions/outputFormat?parameters
+请求参数
+
+某些参数是必备参数，其他则是可选参数。依照 URL 的标准，所有参数都使用“与”字符 (&) 分隔。下面枚举了各个参数及其可能的值。
+
+必填参数
+
+origin – 作为您路线计算起点的地址、纬度/经度文本值或地点 ID。
+如果您传递地址，路线服务将对字符串进行地理编码，并将其转换为纬度/经度坐标以计算路线。该坐标可能不同于 Google Maps Geocoding API 返回的值，例如可能是建筑入口而不是其中心。
+origin=24+Sussex+Drive+Ottawa+ON
+如果您传递坐标，它们将不加更改地直接用于计算路线。确保纬度值与经度值之间不存在空格。
+origin=41.43206,-81.38992
+地点 ID 必须带有 place_id: 前缀。只有当请求包括 API 密钥或 Google Maps APIs Premium Plan 客户端 ID 时，才能指定地点 ID。可以从 Google Maps Geocoding API 和 Google Places API（包括地点自动填充）检索地点 ID。如需查看使用来自“地点自动完成”的地点 ID 的示例，请参阅地点自动完成和路线。如需了解更多有关地点 ID 的内容，请参阅地点 ID 概览。
+origin=place_id:ChIJ3S-JXmauEmsRUcIaWtf4MzE
+destination – 作为您路线计算终点的地址、纬度/经度文本值或地点 ID。destination 参数的选项与上述 origin 参数相同。
+key – 您的应用的 API 密钥。此密钥可以标识您的应用，以便进行配额管理。了解如何获取密钥。
+注：Google Maps APIs Premium Plan 客户可以在 Directions 请求中使用 API 密钥或有效的客户端 ID 和数字签名。获取有关 Premium Plan 客户身份验证参数的更多信息。
+可选参数
+
+mode（默认为 driving）– 指定在计算路线时使用的交通模式。出行模式中规定了有效值和其他请求详情。
+waypoints – 指定一组路径点。路径点通过使路线经过指定位置来改变路线。路径点以纬度/经度坐标、编码的多段线、地点 ID 或将接受地理编码的地址形式指定。编码的多段线必须带有 enc: 前缀并且后面紧跟一个冒号 (:)。地点 ID 必须带有 place_id: 前缀。只有当请求包括 API 密钥或 Google Maps APIs Premium Plan 客户端 ID 时，才能指定地点 ID。只有驾车、步行和骑行路线支持路径点。如需了解有关路径点的详细信息，请参阅下面的路径点指南。
+alternatives – 设置为 true 时，指定 Directions 服务可在响应中提供多个备选路线。请注意，提供备选路线可能会增加服务器的响应时间。
+avoid – 表示计算的路线应避开指定的特征。该参数支持下列自变量：
+tolls 表示计算的路线应避开收费公路/桥梁。
+highways 表示计算的路线应避开高速公路。
+ferries 表示计算的路线应避开渡口。
+indoor 表示计算的路线应避开步行路线和公共交通路线的室内分段。只有包括 API 密钥或 Google Maps APIs Premium Plan 客户 ID 的请求会在默认情况下收到室内分段。
+如需了解详细信息，请参阅下文的路线限制。
+language – 返回结果时使用的语言。
+请参阅支持的语言列表。Google 会经常更新支持的语言，所以此列表可能并不详尽。
+如果未提供 language，API 会按照 Accept-Language 标头中的指定尝试使用首选语言，或发出请求的网域的当地语言。
+API 会尽力提供用户和当地人都能看懂的街道地址。为实现这一目标，它会以当地语言返回街道地址，然后在必要时按照首选语言将其直译为用户能看懂的文字。所有其他地址均以首选语言返回。地址部分均以同一语言返回，该语言是从第一部分选择的语言。
+如果名称在首选语言中没有对应项，API 会使用最接近的匹配项。
+首选语言对 API 选择返回的结果集以及结果的返回顺序影响较小。地理编码器对缩写词的解读因语言而异，例如街道类型的缩写词，或者在一种语言中有效但在其他语言中无效的同义词。例如，在匈牙利语中，utca 和 tér 是街道的同义词。
+units – 指定显示结果时使用的单位制。有效值见下文单位制部分所述
+region – 指定地区代码，以 ccTLD（“顶级域”）双字符值形式指定。（如需了解详细信息，请参阅下面的地区偏向。）
+arrival_time - 指定所需的公共交通路线到达时间，以协调世界时 1970 年 1 月 1 日午夜以来的秒数表示。可以指定 departure_time 或 arrival_time 之一，但不能同时指定这两者。请注意，arrival_time 必须指定为整数。
+departure_time – 指定所需的出发时间。可以将该时间指定为一个整数，以协调世界时 1970 年 1 月 1 日午夜以来的秒数表示。此外，还可以指定 now 值，该值将出发时间设置为当前时间（修正为最接近的秒）。可在两种情况下指定出发时间：
+对于出行模式为公共交通的请求：作为可选步骤，您可以指定 departure_time 或 arrival_time 之一。如果两个时间均未指定，则 departure_time 默认使用 now 值（即，出发时间默认为当前时间）。
+对于出行模式为驾车的请求：您可以指定 departure_time 以获得考虑了交通状况因素的路线和驾行持续时间（响应字段：duration_in_traffic）。只有在请求包含有效的 API 密钥，或者有效的 Google Maps APIs Premium Plan 客户 ID 和签名时，此选项才可用。departure_time 必须设置为当前时间或未来的某个时间，而不能是过去的时间。
+traffic_model（默认为 best_guess）– 指定在计算交通时间时使用的假设。此设置影响响应中 duration_in_traffic 字段中返回的值，该字段包含根据历史平均值预测的交通时间。只能为请求中包括 departure_time 的驾车路线指定 traffic_model 参数，并且只能在请求包括 API 密钥或 Google Maps APIs Premium Plan客户端 ID 时进行指定。该参数的可用值如下：
+best_guess（默认值）表示返回的 duration_in_traffic 应为在同时考虑已知历史交通状况和实时交通状况的情况下对出行时间做出的最佳估计。departure_time 与当前时间越接近，实时交通状况就越重要。
+pessimistic 表示返回的 duration_in_traffic 应在大多数日期长于实际出行时间，但在交通状况特别糟糕的日期，可能偶尔会发生超过该值的情况。
+optimistic 表示返回的 duration_in_traffic 应在大多数日期短于实际出行时间，但在交通状况特别理想的日期，可能偶尔会发生小于该值的情况。
+best_guess 的默认值将为大多数用例提供最有用的预测。best_guess 行程时间预测可能比 optimistic 的时间短或者比 pessimistic 的时间长，因为 best_guess 预测模式会整合实时交通信息。
+transit_mode – 指定一个或多个首选公共交通模式。只能为公共交通路线指定此参数，并且只有在请求包括 API 密钥或 Google Maps APIs Premium Plan客户端 ID 时才能进行指定。该参数支持下列自变量：
+bus 表示计算的路线应首选公共汽车出行。
+subway 表示计算的路线应首选地铁出行。
+train 表示计算的路线应首选火车出行。
+tram 表示计算的路线应首选有轨电车和轻轨出行。
+rail 表示计算的路线应首选火车、有轨电车、轻轨和地铁出行。它相当于 transit_mode=train|tram|subway。
+transit_routing_preference – 指定公共交通路线首选项。可以利用该参数影响返回的选项，而不是接受 API 选择的默认最佳路线。只能为公共交通路线指定此参数，并且只有在请求包括 API 密钥或 Google Maps APIs Premium Plan客户端 ID 时才能进行指定。该参数支持下列自变量：
+less_walking 表示计算的路线应首选步行距离有限的路线
+fewer_transfers 表示计算的路线应首选换乘次数有限的路线
+示例路线请求
+
+以下请求返回从安大略省多伦多至魁北克省蒙特利尔的驾车路线。
+
+https://maps.googleapis.com/maps/api/directions/json?origin=Toronto&destination=Montreal&key=YOUR_API_KEY
+通过更改 mode 和 avoid 参数，可将初始请求修改为返回避开大型高速公路的观光自行车骑行路线。
+
+https://maps.googleapis.com/maps/api/directions/json?origin=Toronto&destination=Montreal&avoid=highways&mode=bicycling&key=YOUR_API_KEY
+以下请求搜索从纽约市布鲁克林区至纽约市皇后区的公共交通路线。该请求未指定 departure_time，因此出发时间默认为当前时间：
+
+https://maps.googleapis.com/maps/api/directions/json?origin=Brooklyn&destination=Queens&mode=transit&key=YOUR_API_KEY
+以下请求包括具体的出发时间。
+
+注：在该示例中，指定的出发时间是 2012 年 7 月 30 日上午 09:45。为避免错误，您必须将该参数更改为某个未来时间，然后再提交请求。
+
+https://maps.googleapis.com/maps/api/directions/json?origin=Brooklyn&destination=Queens&departure_time=1343641500&mode=transit&key=YOUR_API_KEY
+以下请求利用地点 ID 返回从英国格拉斯哥至英国珀斯的驾车路线。
+
+https://maps.googleapis.com/maps/api/directions/json?origin=place_id:ChIJ685WIFYViEgRHlHvBbiD5nE&destination=place_id:ChIJA01I-8YVhkgRGJb0fW4UX7Y&key=YOUR_API_KEY
+出行模式
+
+当您计算路线时，可以指定要使用的交通 mode。默认情况下，计算的路线为 driving 路线。支持下列出行模式：
+
+driving（默认值）表示使用道路网的标准驾车路线。
+walking 请求经由步道和人行道（如有）的步行路线。
+bicycling 请求经由自行车道和首选街道（如有）的骑行路线。
+transit 请求经由公共交通线路（如有）的路线。如果您将该模式设置为 transit，作为可选步骤，您可以指定 departure_time 或 arrival_time。如果两个时间均未指定，则 departure_time 默认使用 now 值（即，出发时间默认为当前时间）。作为可选步骤，您还可提供 transit_mode 和/或 transit_routing_preference。
+注：有时，步行路线和骑行路线可能均不包括明确的步道或自行车道，因此这些路线将在您必须向用户显示的返回结果中返回 warnings。
+
+路径点
+
+使用 Google Maps Directions API 计算路线时，您还可以指定驾车、步行或骑行路线的路径点。路径点不适用于公交路线。您可以利用路径点计算途经附加位置的路线，在这种情况下，返回的路线将包括在每个已知路径点处的停靠站。
+
+在 waypoints 参数中指定路径点。
+
+可以地址、纬度/经度坐标或地点 ID 形式提供一个或多个以管道字符 (|) 分隔的位置：
+如果您传递地址，路线服务将对字符串进行地理编码，并将其转换为纬度/经度坐标以计算路线。该坐标可能不同于 Google Maps Geocoding API 返回的值，例如可能是建筑入口而不是其中心。
+如果您传递纬度/经度坐标，它们将不加更改地直接用于计算路线。确保纬度值与经度值之间不存在空格。
+如果提供的是地点 ID，必须为其添加 place_id: 前缀。只有当请求包括 API 密钥或 Google Maps APIs Premium Plan 客户端 ID 时，才能指定地点 ID。可以从 Google Maps Geocoding API 和 Google Places API（包括地点自动填充）检索地点 ID。如需查看使用来自“地点自动完成”的地点 ID 的示例，请参阅地点自动完成和路线。如需了解更多有关地点 ID 的内容，请参阅地点 ID 概览。
+或者，也可以提供一组使用编码多段线算法的编码坐标。如果您有大量路径点，那么这样做会特别有用，因为在使用编码的多段线时，网址会显著缩短。
+编码的多段线必须带有 enc: 前缀并且后面紧跟一个冒号 (:)。例如：waypoints=enc:gfo}EtohhU:
+还可使用管道符号 (|) 分隔来加入多个编码多段线。例如：waypoints=via:enc:wc~oAwquwMdlTxiKtqLyiK:|enc:c~vnAamswMvlTor@tjGi}L:|via:enc:udymA{~bxM:
+以下网址将发起一个 Directions 请求，请求马萨诸塞州波士顿至马萨诸塞州康科德的路线，期间顺次停靠查尔斯顿和列克星敦：
+
+https://maps.googleapis.com/maps/api/directions/json?origin=Boston,MA&destination=Concord,MA&waypoints=Charlestown,MA|Lexington,MA&key=YOUR_API_KEY
+对于请求中的每个路径点，路线响应均会在 legs 数组中加入一个额外条目，提供该段旅程的对应详情。
+
+如果您想在不添加停靠站的情况下利用路径点影响路线，请为路径点添加 via: 前缀。带有 via: 前缀的路径点不会向 legs 数组添加条目，而是将旅程路线改为途经提供的路径点。
+
+以下 URL 对之前请求做了适当修改，将旅程路线改为途经列克星敦，并且不做停靠：
+
+https://maps.googleapis.com/maps/api/directions/json?origin=Boston,MA&destination=Concord,MA&waypoints=Charlestown,MA|via:Lexington,MA&key=YOUR_API_KEY
+创建路线来响应用户在地图上拖动路径点的操作时，via: 前缀最为有效。这样做可让用户实时了解最终路线的具体走向，并有助于确保将路径点放置在 Google Maps Directions API 可以访问的位置。
+
+注意：如果使用 via: 前缀来避免停靠，形成的路线将会非常严格地判读路径点。如果 Google Maps Directions API 无法创建途经该点的路线，这可能导致路线绕路严重，或者响应状态代码中出现 ZERO_RESULTS。
+以下网址将使用纬度/经度坐标请求路径点：
+
+https://maps.googleapis.com/maps/api/directions/json?origin=sydney,au&destination=perth,au&waypoints=via:-37.81223%2C144.96254%7Cvia:-34.92788%2C138.60008&key=YOUR_API_KEY
+下面是同一个请求，不过是使用编码的多段线：
+
+https://maps.googleapis.com/maps/api/directions/json?origin=sydney,au&destination=perth,au&waypoints=via:enc:lexeF{~wsZejrPjtye@:&key=YOUR_API_KEY
+优化您的路径点
+
+默认情况下，“路线”服务会按所提供路径点的给定顺序计算经过这些路径点的路线。作为可选步骤，您可以传递 optimize:true 作为 waypoints 参数内的第一个自变量，以便 Directions 服务通过按更高效的顺序重组路径点来优化提供的路线。（此优化用于求解旅行推销员问题。）行程时间是主要因素并且经过了优化，但在决定哪一条路线最高效时，也可将距离、转弯次数以及许多其他因素考虑在内。所有路径点都必须是停靠点，以便“路线”服务优化它们的路线。
+
+如果您指示 Directions 服务优化其路径点的顺序，其顺序将通过 routes 对象内的 waypoint_order 字段返回。waypoint_order 字段返回以零为起点的值。
+
+以下示例利用路线优化计算从南澳大利亚州阿德莱德至南澳大利亚州各主要葡萄酒产区的公路旅行路线。
+
+https://maps.googleapis.com/maps/api/directions/json?origin=Adelaide,SA&destination=Adelaide,SA&waypoints=optimize:true|Barossa+Valley,SA|Clare,SA|Connawarra,SA|McLaren+Vale,SA&key=YOUR_API_KEY
+对计算路线的检查表明，该路线是按以下路径点顺序计算的：
+
+"waypoint_order": [ 1, 0, 2, 3 ]
+限制
+
+计算的路线可以遵从特定限制。利用 avoid 参数来表示限制，该参数的自变量表示需要避开的限制。支持下列限制：
+
+avoid=tolls
+avoid=highways
+avoid=ferries
+可通过同时向 avoid 参数传递多种限制来请求可避开收费公路、高速公路和渡口任意组合的路线。例如：avoid=tolls|highways|ferries。
+
+注：添加限制不会将包括受限特征的路线排除在外，其作用仅仅是通过影响结果来获得更有利的路线。
+
+单位制
+
+路线结果在 distance 字段内包含有 text，可向用户显示这些文本，以指示路线某一“分段”的距离。默认情况下，这些文本使用起点国家或地区的单位制。
+
+例如，从“伊利诺斯州芝加哥市”到“安大略省多伦多市”的路线结果将以英里显示，而反向路线结果以公里显示。您可以通过在请求的 units 参数内显式地进行设置，传递下列值之一，来重写该单位制：
+
+metric 指定使用公制。返回的文本距离使用公里和米。
+imperial 指定使用英制。返回的文本距离使用英里和英尺。
+注：此单位制设置只影响显示在 distance 字段内的 text。distance 字段还包含始终以米表示的 values。
+
+地区偏向
+
+您还可以利用 region 参数将 Directions 服务设置为返回偏向特定地区的结果。该参数带有指定地区偏向的 ccTLD（国家代码顶级域）自变量。大多数 ccTLD 代码与 ISO 3166-1 代码相同，但有一些明显的例外。例如，英国的国家代码顶级域名为“uk”(.co.uk)，而其 ISO 3166-1 代码却是“gb”（专指“大不列颠及北爱尔兰联合王国”这一实体）。
+
+您可以利用 Google 地图主应用发布了驾车路线的任何域。
+
+例如，如果 region 设置为 es，从“托莱多”至“马德里”的路线请求便可返回结果，因为“托莱多”会被解读为西班牙城市：
+
+https://maps.googleapis.com/maps/api/directions/json?origin=Toledo&destination=Madrid&region=es&key=YOUR_API_KEY
+
+{
+  "status": "OK",
+  "routes": [ {
+    "summary": "AP-41",
+    "legs": [ {
+        ...
+    } ],
+    "copyrights": "Map data ©2010 Europa Technologies, Tele Atlas",
+    "warnings": [ ],
+    "waypoint_order": [ ]
+  } ]
+}
+如果发送的“托莱多”至“马德里”路线请求不带 region 参数，则不会返回任何结果，因为“托莱多”会被解读为俄亥俄州的城市：
+
+https://maps.googleapis.com/maps/api/directions/json?origin=Toledo&destination=Madrid&key=YOUR_API_KEY
+
+{
+  "status": "ZERO_RESULTS",
+  "routes": [ ]
+}
+路线响应
+
+路线响应以 URL 请求路径中 output 标志指示的格式返回。
+
+示例响应
+
+下面显示了一个示例 HTTP 请求，计算从伊利诺伊州芝加哥至加利福尼亚州洛杉矶，途径密苏里州乔普林和俄克拉荷马州俄克拉荷马市这两个路径点的路线。
+
+https://maps.googleapis.com/maps/api/directions/json?origin=Chicago,IL&destination=Los+Angeles,CA&waypoints=Joplin,MO|Oklahoma+City,OK&key=YOUR_API_KEY
+以上示例请求 JSON 输出。也可请求 XML 输出。点击下面的选项卡，查看 JSON 和 XML 响应示例。
+
+由于路线结果可能相当冗长，因此为清楚起见，省略了响应内的重复元素。
+
+JSONXML
+{
+  "status": "OK",
+  "geocoded_waypoints" : [
+     {
+        "geocoder_status" : "OK",
+        "place_id" : "ChIJ7cv00DwsDogRAMDACa2m4K8",
+        "types" : [ "locality", "political" ]
+     },
+     {
+        "geocoder_status" : "OK",
+        "place_id" : "ChIJ69Pk6jdlyIcRDqM1KDY3Fpg",
+        "types" : [ "locality", "political" ]
+     },
+     {
+        "geocoder_status" : "OK",
+        "place_id" : "ChIJgdL4flSKrYcRnTpP0XQSojM",
+        "types" : [ "locality", "political" ]
+     },
+     {
+        "geocoder_status" : "OK",
+        "place_id" : "ChIJE9on3F3HwoAR9AhGJW_fL-I",
+        "types" : [ "locality", "political" ]
+     }
+  ],
+  "routes": [ {
+    "summary": "I-40 W",
+    "legs": [ {
+      "steps": [ {
+        "travel_mode": "DRIVING",
+        "start_location": {
+          "lat": 41.8507300,
+          "lng": -87.6512600
+        },
+        "end_location": {
+          "lat": 41.8525800,
+          "lng": -87.6514100
+        },
+        "polyline": {
+          "points": "a~l~Fjk~uOwHJy@P"
+        },
+        "duration": {
+          "value": 19,
+          "text": "1 min"
+        },
+        "html_instructions": "Head \u003cb\u003enorth\u003c/b\u003e on \u003cb\u003eS Morgan St\u003c/b\u003e toward \u003cb\u003eW Cermak Rd\u003c/b\u003e",
+        "distance": {
+          "value": 207,
+          "text": "0.1 mi"
+        }
+      },
+      ...
+      ... additional steps of this leg
+    ...
+    ... additional legs of this route
+      "duration": {
+        "value": 74384,
+        "text": "20 hours 40 mins"
+      },
+      "distance": {
+        "value": 2137146,
+        "text": "1,328 mi"
+      },
+      "start_location": {
+        "lat": 35.4675602,
+        "lng": -97.5164276
+      },
+      "end_location": {
+        "lat": 34.0522342,
+        "lng": -118.2436849
+      },
+      "start_address": "Oklahoma City, OK, USA",
+      "end_address": "Los Angeles, CA, USA"
+    } ],
+    "copyrights": "Map data ©2010 Google, Sanborn",
+    "overview_polyline": {
+      "points": "a~l~Fjk~uOnzh@vlbBtc~@tsE`vnApw{A`dw@~w\\|tNtqf@l{Yd_Fblh@rxo@b}@xxSfytAblk@xxaBeJxlcBb~t@zbh@jc|Bx}C`rv@rw|@rlhA~dVzeo@vrSnc}Axf]fjz@xfFbw~@dz{A~d{A|zOxbrBbdUvpo@`cFp~xBc`Hk@nurDznmFfwMbwz@bbl@lq~@loPpxq@bw_@v|{CbtY~jGqeMb{iF|n\\~mbDzeVh_Wr|Efc\\x`Ij{kE}mAb~uF{cNd}xBjp]fulBiwJpgg@|kHntyArpb@bijCk_Kv~eGyqTj_|@`uV`k|DcsNdwxAott@r}q@_gc@nu`CnvHx`k@dse@j|p@zpiAp|gEicy@`omFvaErfo@igQxnlApqGze~AsyRzrjAb__@ftyB}pIlo_BflmA~yQftNboWzoAlzp@mz`@|}_@fda@jakEitAn{fB_a]lexClshBtmqAdmY_hLxiZd~XtaBndgC"
+    },
+    "warnings": [ ],
+    "waypoint_order": [ 0, 1 ],
+    "bounds": {
+      "southwest": {
+        "lat": 34.0523600,
+        "lng": -118.2435600
+      },
+      "northeast": {
+        "lat": 41.8781100,
+        "lng": -87.6297900
+      }
+    }
+  } ]
+}
+一般而言，查询路线时只返回 routes 数组中的一个条目，但如果您传递 alternatives=true，Directions 服务则可返回几个路线。
+
+请注意，如果您想从结果中提取值，通常需要对这些结果进行解析。JSON 的解析相对容易。请参阅解析 JSON，了解一些建议的设计模式。
+本文档的其余部分将使用 JSON 语法。在大多数情况下，在用于说明文档中的概念或字段名称时，输出格式无关紧要。但请注意下列细微差异：
+
+XML 结果包装在 <DirectionsResponse> 根元素中。
+JSON 通过多元数组（例如，steps 和 legs）来表示含有多个元素的条目，而 XML 使用多个单元素（例如，<step> 和 <leg>）来表示这些条目。
+JSON 通过 waypoint_order 字段表示路径点顺序，而 XML 使用各个 <waypoint_index> 元素表示这些顺序。
+在 JSON 中，通过空数组来表示空元素，但在 XML 中，则是通过任何此类元素的不存在来表示。例如，在 JSON 中，不生成结果的响应将返回空的 routes 数组，但在 XML 中，则是不返回 <route> 元素。
+路线响应元素
+
+路线响应包含下列根元素：
+
+status 包含请求的元数据。请参阅下面的状态代码。
+geocoded_waypoints 包含一个数组，其中提供了有关起点、目的地和路径点地理编码的详情。请参阅下文的地理编码路径点。
+routes 包含一个数组，其中提供了从起点至目的地的路线。请参阅下文的路线。路线包括嵌套的段和分段。
+available_travel_modes 包含一组可用的出行模式。如果请求指定出行 mode 但没有结果，将返回此字段。数组包含给定路径点集所在国家/地区可用的出行模式。如果一个或多个路径点为 via: 路径点，将不会返回此字段。请参阅下面的详细信息。
+状态代码
+
+Directions 响应对象中的 status 字段包含了请求的状态，还可能包含调试信息，以帮助您追查 Directions 服务的失败原因。status 字段可以包含以下值：
+
+OK 表示响应包含有效的 result。
+NOT_FOUND 表示请求的起点、目的地或路径点中指定的至少其中一个位置无法接受地理编码。
+ZERO_RESULTS 表示在起点与目的地之间未找到路线。
+MAX_WAYPOINTS_EXCEEDED 表示请求中提供的 waypoints 过多。对于使用 Google Maps Directions API 作为网络服务或者使用 Google Maps JavaScript API 中的路线服务的应用，允许的最大 waypoints 数量为 23，再加上起点和目的地。Google Maps APIs Premium Plan客户可以提交最多包含 23 个路径点以及起点和目的地的请求。
+INVALID_REQUEST 表示提供的请求无效。这一状态的常见原因包括参数或参数值无效。
+OVER_QUERY_LIMIT 表示服务在允许的时段内从您的应用收到的请求数量过多。
+REQUEST_DENIED 表示服务拒绝您的应用使用路线服务。
+UNKNOWN_ERROR 表示由于服务器发生错误而无法处理路线请求。如果您重试一次，请求可能会成功
+错误消息
+
+如果状态代码不是 OK，在 Directions 响应对象中可能会包含附加的 error_message 字段。此字段更详细地说明了给定状态代码背后的原因。
+
+注：此字段不保证始终出现，并且其内容可能会更改。
+
+地理编码路径点
+
+如需了解有关各路径点以及起点和目的地地理编码的详情，请参阅 (JSON) geocoded_waypoints 数组。可以利用它们推断出服务返回意外路线或不返回路线的原因。
+
+geocoded_waypoints 数组中的元素按照其以零为起点的位置，与起点、指定顺序的路径点及目的地一一对应。每个元素都包含下列有关对应路径点地理编码运算的详情：
+
+geocoder_status：表示地理编码操作所产生的状态代码。此字段可能包含以下值：
+"OK" 表示未出现任何错误；已成功解析地址，并且至少返回了一个地理编码。
+"ZERO_RESULTS" 表示地理编码成功，但未返回任何结果。如果向地理编码器传递了一个不存在 address，就可能会发生这种情况。
+partial_match 表示虽然地理编码器能够匹配所请求的地址的一部分，但它未能返回原始请求的精确匹配项。您不妨检查一下原始请求中是否有拼写错误和/或地址不完整的情况。
+
+对于请求中所传递的行政区划内不存在的街道地址，最常发生部分匹配的情况。当请求与同一行政区划中的两个或更多位置相匹配时，也可能会返回部分匹配。例如，“21 Henr St, Bristol, UK”将返回 Henry Street 和 Henrietta Street 这两项部分匹配结果。请注意，如果请求中包含拼写错误的地址组成部分，地理编码服务可能会建议一个备选地址。以这种方式触发的建议也将标记为部分匹配。
+place_id 是唯一一个可以与其他 Google API 结合使用的标识符。例如，您可以使用 Google 地点自动完成响应中的 place_id 来计算前往本地商家的路线。请参阅地点 ID 概览。
+types 表示用于计算路线的地理编码结果的地址类型。返回以下类型：
+street_address 表示精确的街道地址。
+route：表示已命名的路线（例如“US 101”）
+intersection：表示主要交叉路口，通常是两条主要道路的交叉路口
+political：表示政治实体。通常，这种类型表示某个民政管理部门的多边形
+country：表示国家政治实体，通常是由地理编码器返回的最高级别类型
+administrative_area_level_1：表示国家/地区级别以下的一级行政实体。在美国，这种行政级别就是州。并非所有国家都设有这类行政级别在大多数情况下，administrative_area_level_1 短名称可高度匹配 ISO 3166-2 行政区划以及其他广为传播的列表；不过，我们无法做出保证，因为我们的地理编码结果基于各种信号和位置数据。
+administrative_area_level_2：表示国家/地区级别以下的二级行政实体。在美国，这种行政级别就是县。并非所有国家都设有这类行政级别
+administrative_area_level_3：表示国家/地区级别以下的三级行政实体。此类型表示较小的行政区划单位。并非所有国家都设有这类行政级别
+administrative_area_level_4：表示国家/地区级别以下的四级行政实体。此类型表示较小的行政区划单位。并非所有国家都设有这类行政级别
+administrative_area_level_5：表示国家/地区级别以下的五级行政实体。此类型表示较小的行政区划单位。并非所有国家都设有这类行政级别
+colloquial_area：表示实体的常用替代名称
+locality 表示合并的城市或城镇政治实体。
+ward 表示一种特定的日本行政区划类型，以便于区分某个日本地址中的多个行政区划组成部分。
+sublocality：表示 locality 以下的一级行政实体。某些位置可能会收到其他类型之一：从 sublocality_level_1 到 sublocality_level_5。每个 sublocality 级别都是一个行政实体。数字越大，表示的地理区域越小
+neighborhood 表示已命名的街区
+premise 表示已命名的位置，通常是具有常见名称的一栋或一群建筑物
+subpremise 表示指定位置以下的一级实体，通常是同名建筑群中的单个建筑物
+postal_code 表示邮政编码，用于国内的地址邮寄。
+natural_feature：表示著名的自然景观
+airport：表示机场
+park：表示已命名的公园。
+point_of_interest 表示已命名的景点。通常，这些“景点”是不容易归入其他类别的著名地方实体，如“帝国大厦”或“自由女神像”。
+空的类型列表表示特殊的地址组成部分没有对应的已知类型，例如法国的地方 (Lieu-dit)。
+如果服务未返回结果，则指定为文本纬度/经度值的路径点将不存在这些详情。这是因为，找到路线后，只会对此类路径点进行反向地理编码以获得它们所代表的地址。空 JSON 对象将占据 geocoded_waypoints 数组中的相应地点。
+
+路线
+
+当 Google Maps Directions API 返回结果时，会将这些结果放在一个 (JSON) routes 数组中。即使服务没有返回任何结果（例如，如果起点和/或目的地不存在），它仍然会返回一个空的 routes 数组。（XML 响应包含零个或更多个 <route> 元素。）
+
+routes 数组的每个元素都包含来自指定起点和目的地的单个结果。视是否指定了任何路径点而定，该路线可能包括一个或多个段。除路线信息外，该路线还包含必须向用户显示的版权和警告信息。
+
+routes 字段内的每个路线都可能包含下列字段：
+
+summary 包含包含简短的路线文本说明，适用于命名路线以及消除路线与备选路线的歧义。
+legs[] 包含一个数组，其中包含给定路线内某一段（两个位置之间）的相关信息。指定的每个路径点或目的地都有单独的段与之对应。（不含路径点的路线在 legs 数组内将只包含一个段。）每一段都包含一系列分段。（请参阅下文的路线段。）
+waypoint_order（以 XML 格式时为 <waypoint_index>）包含一个数组，用于指示所计算路线内所有路径点的顺序。如果为请求的 waypoints 参数传递了 optimize:true，则可对这些路径点重新排序。
+overview_polyline：其中包含单个 points 对象，用于储存以经过编码的折线表示的路线。此折线是所生成路线的近似（平滑处理）路径
+bounds 包含 overview_polyline 的视口边界框。
+copyrights 包含需要为该路线显示的版权文本。您必须自行处理和显示该信息。
+warnings[]：其中包含要在显示这些路线时显示的一组警告。您必须自行处理和显示这些警告。
+fare：若存在，则包含该路线的总票价（即总票费）。此属性只针对公交请求返回，且仅适用于所有公交路程均有票价信息的路线。这些信息包括：
+currency：ISO 4217 币种代码，表示票价所采用的币种
+value：总票价（以上面指定的币种为单位）
+text：总票价金额，设置为所请求语言的格式
+以下是路线内票价信息的示例：
+
+"routes" : [
+   {
+      "bounds" : {
+         "northeast" : {
+            "lat" : 37.8079996,
+            "lng" : -122.4074334
+         },
+         "southwest" : {
+            "lat" : 37.7881005,
+            "lng" : -122.4203553
+         }
+      },
+      "copyrights" : "Map data ©2015 Google",
+      "fare" : {
+         "currency" : "USD",
+         "value" : 6
+         "text" : "$6.00"
+      },
+      ...
+   }]
+段
+
+legs 数组中的每个元素都指定所计算路线内从起点至目的地的某一段旅程。对于不包含任何路径点的路线，将包含一段“路程”；但对于定义了一个或多个路径点的路线，将包含一段或多段路程（与相关行程的特定路程相对应）。
+
+legs 字段内的每个段都可能包含下列字段：
+
+steps[] 包含一系列分段，表示有关旅程段每个单独分段的信息。（请参阅下文的路线分段。）
+distance 表示该段覆盖的总距离，采用包含下列元素的字段形式：
+
+value：表示距离（以米为单位）
+text 包含可人工读取的距离值，以起点处使用的单位（或者请求中 units 参数内重写的单位）显示。（例如，美国境内的任何起点都将使用英里和英尺。）请注意，无论将什么单位制显示为文本，distance.value 字段包含的值始终以米表示。
+如果距离未知，可能不会出现这些字段。
+duration 表示该段的总持续时间，采用包含下列元素的字段形式：
+
+value：表示持续时间（以秒为单位）
+text：其中包含以可人工读取形式表示的持续时间
+如果持续时间未知，可能不会出现这些字段。
+duration_in_traffic 表示该段的总持续时间。该值是根据当前和历史交通状况预估的交通时间。请参阅 traffic_model 请求参数，了解您可以利用哪些选项来请求以乐观估计、悲观估计或最佳猜测估计作为返回值。只有在满足所有下列条件时，才会返回交通持续时间：
+
+请求包含有效的 API 密钥，或者有效的 Google Maps APIs Premium Plan 客户 ID 和签名
+请求不包括停靠路径点如果请求包含路径点，则这些路径点必须带有 via: 前缀，以避免停靠。
+请求专用于驾车路线 - mode 参数设置为 driving。
+请求包括 departure_time 参数
+可以获得所请求路线的交通状况
+duration_in_traffic 包含以下字段：
+
+value：表示持续时间（以秒为单位）
+text：其中包含以可人工读取形式表示的持续时间
+arrival_time：其中包含此路程的预计到达时间。该属性只针对公交路线返回。结果以 Time 对象形式返回，具有以下三个属性：
+value：以 JavaScript Date 对象指定的时间
+text：以字符串形式指定的时间。时间以公共交通车站的时区显示。
+time_zone 包含该站的时区。该值就是 IANA 时区数据库中定义的时区名称，例如“America/New_York”
+departure_time：其中包含以 Time 对象指定的此路程的预计出发时间。只会为公共交通路线提供 departure_time。
+start_location 包含该段起点的纬度/经度坐标。由于 Directions API 在计算位置间的路线时使用的是最接近起点和终点的交通方案（通常是道路），举例来说，如果起点附近没有道路，start_location 则可能不同于所提供的该段起点。
+end_location 包含该段给定目的地的纬度/经度坐标。由于 Google Maps Directions API 在计算位置间的路线时使用的是最接近起点和终点的交通方案（通常是道路），举例来说，如果目的地附近没有道路，end_location 则可能不同于所提供的该段目的地。
+start_address 包含通过对该段的 start_location 进行反向地理编码所获得的可人工读取地址（通常是街道地址）。
+end_address 包含通过对该段的 end_location 进行反向地理编码所获得的可人工读取地址（通常是街道地址）。
+分段
+
+steps 数组中的每个元素都定义所计算路线内的某个分段。分段是导航路线的最基本单位，其包含的单个分段描述的是一条具体的旅程导航指令。例如：“在西四街左转”这个路段不仅介绍指示，同时也包含有关此路段到下个路段的距离和持续时间信息。例如，一个以“并入 I-80 West”表示的路段可能包含距离“37 英里”和持续时间“40 分钟”这些信息，指示下一个路段距离此路段有 37 英里/40 分钟。
+
+使用 Google Maps Directions API 搜索公共交通路线时，分段数组将包括 transit_details 数组形式的附加公共交通详情。如果路线包括多种交通模式，将以内部 steps 数组形式提供步行或驾车分段的详细路线。例如，步行分段将包括从开始位置和结束位置开始的路线：“步行前往 Innes Ave & Fitch St”。该分段将以内部 steps 数组形式提供该路线的详细步行导航，例如：“朝西北方向走”、“左转进入 Arelious Walker”和“左转进入 Innes Ave”。
+
+steps 字段内的每个分段都可能包含下列字段：
+
+html_instructions 包含该分段的格式化指令，以 HTML 文本字符串形式呈现。
+distance 包含从该分段至下一分段起点的覆盖距离。（请参阅上文路线段中对该字段的介绍。）如果距离未知，那么此字段可能未定义
+duration 包含完成该分段至下一分段起点距离通常需要的时间。（请参阅上文路线段中的说明。）如果持续时间未知，该字段可能处于未定义状态。
+start_location 包含该分段起点的位置，以一组lat 字段和 lng 字段形式表示。
+end_location 包含该分段终点的位置，以一组lat 字段和 lng 字段形式表示。
+polyline：其中包含一个 points 对象，用于储存以经过编码的折线形式表示的路段。该多段线是分段的近似（平滑）路径。
+steps 包含公共交通路线中步行或驾车分段的详细路线。只有在 travel_mode 设置为“transit”时，才会出现分段。内部 steps 数组与 steps 的类型相同。
+transit_details 包含公共交通专属信息。只有在 travel_mode 设置为“transit”时，才会返回该字段。请参阅下文的公共交通详情。
+公交详情
+
+公共交通路线返回与其他交通模式无关的附加信息。这些附加属性通过 transit_details 对象公开，以 steps[] 数组中元素字段的形式返回。您可以通过 TransitDetails 对象访问有关公共交通车站、公共交通线路和公共交通局的附加信息。
+
+transit_details 对象可能包含下列字段：
+
+arrival_stop 和 departure_stop 包含有关该部分旅程的车站信息。车站详情可能包括：
+name，公共交通车站的名称，例如：“联合广场”
+location，公共交通车站的位置，以 lat 字段和 lng 字段形式表示
+arrival_time 和 departure_time 包含该段旅程的到达时间或出发时间，以下列三个属性形式指定：
+text：以字符串形式指定的时间。时间以公共交通车站的时区显示。
+value，时间，以 Unix 时间或者协调世界时 1970 年 1 月 1 日午夜以来的秒数指定。
+time_zone 包含该站的时区。该值就是 IANA 时区数据库中定义的时区名称，例如“America/New_York”
+headsign 指定该线路的行进方向，即车辆或出发车站所标示的方向。这通常是终点站。
+headway 表示目前同一车站各次发车的预计间隔秒数。例如，当 headway 值为 600 时，如果您错过了一班公交，那么预计需要 10 分钟才能等到下一班
+num_stops 包含该分段的车站数，计算到达站，不计算出发站。例如，如果您的路线是从站点 A 出发，途经站点 B 和 C，最终到达站点 D，那么 num_stops 将返回 3
+line 包含有关该分段中所使用公共交通线路的信息，可能包括下列属性：
+name 包含该公共交通线路的全名，例如：“第 7 大道快线”。
+short_name 包含该公共交通线路的简称。这通常是线路编号，如“M7”或“355”。
+color 包含该公共交通线路标牌中常用的颜色。颜色以十六进制字符串形式指定，例如：#FF0033
+agencies 包含一个 TransitAgency 对象数组，其中的每个对象都提供有关线路运营商的信息，包括下列属性：
+name：其中包含公交机构的名称
+url：其中包含公交机构的 URL
+phone 包含公共交通运营机构的电话号码
+您必须显示提供旅程结果的公共交通运营机构的名称和 URL。
+url 包含由公共交通运营机构提供的该公共交通线路的 URL。
+icon 包含与该线路关联的图标的 URL。
+text_color：其中包含该线路站牌上常用的文字颜色。颜色以十六进制字符串形式指定
+vehicle 包含该线路使用的车辆类型。这可能包括下列属性：
+name：其中包含该线路上交通工具的名称。例如：“地铁”。
+type 包含在该线路上运行的车辆类型。有关受支持值的完整列表，请参阅交通工具类型文档
+icon 包含与该车辆类型关联的图标的 URL。
+local_icon 包含与该交通工具类型关联的图标的网址，取决于当地交通标志。
+交通工具类型
+
+vehicle.type 属性可能返回下列值之一：
+
+值	定义
+RAIL	火车
+METRO_RAIL	轻轨交通
+SUBWAY	地下轻轨
+TRAM	地上轻轨
+MONORAIL	单轨
+HEAVY_RAIL	重轨
+COMMUTER_TRAIN	通勤轨道
+HIGH_SPEED_TRAIN	高速列车
+BUS	公共汽车
+INTERCITY_BUS	长途客车
+TROLLEYBUS	无轨电车
+SHARE_TAXI	合乘出租车是一种可在其运行路线上随处上下乘客的公共汽车。
+FERRY	渡船
+CABLE_CAR	一种靠电缆运行的车辆，通常在地面上行驶。空中缆车可能属于 GONDOLA_LIFT 类型。
+GONDOLA_LIFT	空中缆车
+FUNICULAR	一种由缆线拉上陡坡的交通工具。索道缆车通常由两个车体组成，彼此作为对方的平衡重物。
+OTHER	所有其他车辆都返回此类型。
+可用出行模式
+
+响应字段 available_travel_modes 包含一组可用的出行模式。如果请求指定出行 mode 但没有结果，将返回此字段。数组包含具有结果的给定路径点集所在国家/地区可用的出行模式。如果任意路径点为 via: 路径点，将不返回此字段。
+
+例如，请试试下面的请求：
+
+https://maps.googleapis.com/maps/api/directions/json?&mode=transit&origin=frontera+el+hierro&destination=la+restinga+el+hierro&departure_time=1399995076&key=YOUR_API_KEY
+它会返回以下响应：
+
+{
+   "available_travel_modes" : [ "DRIVING", "BICYCLING", "WALKING" ],
+   "geocoded_waypoints" : [
+      {
+         "geocoder_status" : "OK",
+         "partial_match" : true,
+         "place_id" : "ChIJwZNMti1fawwRO2aVVVX2yKg",
+         "types" : [ "locality", "political" ]
+      },
+      {
+         "geocoder_status" : "OK",
+         "partial_match" : true,
+         "place_id" : "ChIJ3aPgQGtXawwRLYeiBMUi7bM",
+         "types" : [ "locality", "political" ]
+      }
+   ],
+   "routes" : [],
+   "status" : "ZERO_RESULTS"
+}
+sensor 参数
+
+Google Maps API 之前要求您将 sensor 参数包括在内，以指示您的应用是否使用传感器来确定用户的位置。但该参数现在不再是必填项。

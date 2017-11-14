@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import static android.content.Context.MODE_MULTI_PROCESS;
 
 /**
- * Created by dzs on 2016/11/28.
  */
 public class StepServiceFlagController {
 

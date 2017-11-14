@@ -1,6 +1,5 @@
 package com.zk.walkwayapp.view.activity;
 
-import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,15 +10,15 @@ import com.avos.avoscloud.AVUser;
 import com.zk.library.common.mvp.BaseActivity;
 import com.zk.library.common.mvp.ContentView;
 import com.zk.walkwayapp.R;
-import com.zk.walkwayapp.presenter.LoginPresenter;
+import com.zk.walkwayapp.contract.LoginContract;
+import com.zk.walkwayapp.presenter.login.LoginPresenter;
 import com.zk.walkwayapp.view.MainActivity;
-import com.zk.walkwayapp.view.interfaces.ILoginActivity;
 
 import butterknife.Bind;
 import butterknife.OnClick;
 
 @ContentView(R.layout.activity_login)
-public class LoginActivity extends BaseActivity<LoginPresenter> implements ILoginActivity {
+public class LoginActivity extends BaseActivity<LoginContract.ILoginPresenter> implements LoginContract.ILoginActivity {
 
     @Bind(R.id.imgLogo)
     ImageView imgLogo;
@@ -35,7 +34,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements ILogi
     TextView tvFindPwd;
 
     @Override
-    protected LoginPresenter getPresenter() {
+    protected LoginContract.ILoginPresenter getPresenter() {
         return new LoginPresenter(this);
     }
 
@@ -72,20 +71,10 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements ILogi
      */
     @Override
     public void regist() {
-        Intent intent = new Intent();
-        intent.setClass(this,RegistActivity.class);
-        startActivity(intent);
+        nextActivity(RegistActivity.class);
     }
 
-    /**
-     * 找回密码
-     */
-    @Override
-    public void findPwd() {
-//        Intent intent = new Intent();
-//        intent.setClass(this,FindPwdActivity.class);
-//        startActivity(intent);
-    }
+
     /**
      * 登录成功
      */
@@ -104,9 +93,6 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements ILogi
         showToast(err_msg);
     }
 
-
-
-
     @OnClick({R.id.tvRegist, R.id.tvFindPwd, R.id.btn_login})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -120,5 +106,12 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements ILogi
                 login();
                 break;
         }
+    }
+    /**
+     * 找回密码
+     */
+    @Override
+    public void findPwd() {
+//        nextActivity(FindPwdActivity.class);
     }
 }

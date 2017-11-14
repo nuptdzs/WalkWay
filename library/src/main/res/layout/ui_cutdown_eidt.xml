@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/color_gray_232539">
 
-    <com.lakala.ui.component.LineShape
+    <com.zk.library.common.ui.LineShape
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1"
         app:lineColor="#33364f"/>
@@ -44,7 +44,7 @@
                 android:gravity="center"
                 android:padding="@dimen/dimen_10"
                 android:text="验证码"/>
-            <com.lakala.ui.component.ClearEditTextLogin
+            <com.zk.library.common.ui.ClearEditTextLogin
                 style="@style/edit_text_num_style"
                 android:id="@+id/plat_activity_input_verifycode_edittext"
                 android:layout_width="match_parent"

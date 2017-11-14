@@ -34,7 +34,7 @@ public class Bar {
     /**
      * 文字颜色
      */
-	private int color;
+    private int color;
 
     /**
      *
@@ -54,7 +54,7 @@ public class Bar {
     /**
      * 名称
      */
-	private String name = "";
+    private String name = "";
     /**
      * 顶部文字
      */
@@ -70,13 +70,14 @@ public class Bar {
     /**
      * 条目值
      */
-	private float value;
+    private float value;
 
     /**
      * 是否显示项目文字
      */
     private boolean isShowBarText = false;
 
+    private boolean isCurrentTime = false;
     /**
      * 是否显示顶部文字(默认显示)
      */
@@ -121,11 +122,11 @@ public class Bar {
     }
 
     public int getColor() {
-		return color;
-	}
-	public void setColor(int color) {
-		this.color = color;
-	}
+        return color;
+    }
+    public void setColor(int color) {
+        this.color = color;
+    }
 
     public int getDrawable() {
         return drawable;
@@ -136,17 +137,17 @@ public class Bar {
     }
 
     public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public float getValue() {
-		return value;
-	}
-	public void setValue(float value) {
-		this.value = value;
-	}
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public float getValue() {
+        return value;
+    }
+    public void setValue(float value) {
+        this.value = value;
+    }
 
     public String getTopText() {
         return topText;
@@ -218,5 +219,13 @@ public class Bar {
 
     public void setTopTextBreak(boolean isTopTextBreak) {
         this.isTopTextBreak = isTopTextBreak;
+    }
+
+    public boolean isCurrentTime() {
+        return isCurrentTime;
+    }
+
+    public void setCurrentTime(boolean currentTime) {
+        isCurrentTime = currentTime;
     }
 }

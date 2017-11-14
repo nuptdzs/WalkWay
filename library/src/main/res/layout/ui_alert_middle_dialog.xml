@@ -5,7 +5,7 @@
               android:layout_gravity="center"
               android:gravity="center"
               android:orientation="vertical">
-    <com.lakala.ui.maxheightscrollview.MaxHScrollView
+    <com.zk.library.common.ui.MaxHScrollView
         android:id="@+id/maxhscrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="5dp" />
 
-    </com.lakala.ui.maxheightscrollview.MaxHScrollView>
+    </com.zk.library.common.ui.MaxHScrollView>
 
     <LinearLayout
         android:orientation="vertical"

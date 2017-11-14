@@ -26,7 +26,7 @@ public abstract class HttpReuslObs<T> implements Observer<T> {
 
     @Override
     public void onError(Throwable e) {
-        onFailure("网络连接失败",NETWORK_NOT_RESPONDING);
+        onFailure("网络连接失败"+e.getMessage(),NETWORK_NOT_RESPONDING);
     }
 
     Set<String> resultTagsSet = new HashSet<>();

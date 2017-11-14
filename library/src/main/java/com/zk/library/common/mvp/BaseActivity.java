@@ -11,7 +11,7 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 
 
-public abstract class BaseActivity<P extends BasePresenter> extends AppCompatActivity implements IBaseView {
+public abstract class BaseActivity<P extends IMvpPresenter> extends AppCompatActivity implements IBaseView {
 
     private static final String TAG = "BaseActivity";
     protected P presenter;

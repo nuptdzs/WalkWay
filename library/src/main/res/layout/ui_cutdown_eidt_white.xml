@@ -33,7 +33,7 @@
                 android:gravity="center"
                 android:paddingLeft="16dp"
                 android:text="验证码"/>
-            <com.lakala.ui.component.ClearEditTextLogin
+            <com.zk.library.common.ui.ClearEditTextLogin
                 android:inputType="number"
                 android:id="@+id/plat_activity_input_verifycode_edittext"
                 android:layout_width="match_parent"

@@ -47,7 +47,7 @@
 
     </RelativeLayout>
 
-    <com.lakala.ui.module.booheescrollview.BooheeScrollView
+    <com.zk.library.common.ui.module.booheescrollview.BooheeScrollView
         android:id="@+id/ui_id_bar_graph_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -60,5 +60,5 @@
             android:layout_gravity="bottom"
             android:gravity="bottom"
             android:orientation="horizontal" />
-</com.lakala.ui.module.booheescrollview.BooheeScrollView>
+</com.zk.library.common.ui.module.booheescrollview.BooheeScrollView>
 </RelativeLayout>

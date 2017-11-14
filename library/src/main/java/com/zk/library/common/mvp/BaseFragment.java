@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
 
-public abstract class BaseFragment<P extends BasePresenter> extends Fragment implements IBaseView{
+public abstract class BaseFragment<P extends IMvpPresenter> extends Fragment implements IBaseView{
     private static final String TAG = "BaseFragment";
     private BaseActivity baseActivity;
     private View rootView;
@@ -20,12 +20,17 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (rootView != null){
+            ViewGroup parent = (ViewGroup) rootView.getParent();
+            parent.removeView(rootView);
+        }
         if (rootView == null) {
             ContentView contentView = getClass().getAnnotation(ContentView.class);
             if(contentView == null){
                 Log.e(TAG,"you must add the Annotation called ContentView before using this BaseFragment");
                 return null;
             }
+
             int layoutId = contentView.value();
             rootView = inflater.inflate(layoutId, container, false);
         }
@@ -54,7 +59,9 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
     @Override
     public void onDetach() {
         super.onDetach();
-        mPresenter.detachView();
+        if (mPresenter!=null){
+            mPresenter.detachView();
+        }
         baseActivity = null;
     }
 

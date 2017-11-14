@@ -27,6 +27,9 @@ public class SelectDialog extends AlertDialog{
     private final static int maxLines = 6;
     private int seleteIndex = 0;//单选时设置选中的位置
 
+    public SelectDialog(){
+
+    }
     /**
      * 选择对话框
      *

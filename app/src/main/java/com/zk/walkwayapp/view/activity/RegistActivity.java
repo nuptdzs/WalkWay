@@ -11,8 +11,8 @@ import android.widget.TextView;
 import com.zk.library.common.mvp.BaseActivity;
 import com.zk.library.common.mvp.ContentView;
 import com.zk.walkwayapp.R;
-import com.zk.walkwayapp.presenter.RegisterPresenter;
-import com.zk.walkwayapp.view.interfaces.IRegisterActivity;
+import com.zk.walkwayapp.contract.RegisterContract;
+import com.zk.walkwayapp.presenter.login.RegisterPresenter;
 
 import java.lang.ref.WeakReference;
 import java.util.Timer;
@@ -22,7 +22,7 @@ import butterknife.Bind;
 import butterknife.OnClick;
 
 @ContentView(R.layout.activity_regist)
-public class RegistActivity extends BaseActivity<RegisterPresenter> implements IRegisterActivity {
+public class RegistActivity extends BaseActivity<RegisterContract.IRegisterPresenter> implements RegisterContract.IRegisterView {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -38,7 +38,7 @@ public class RegistActivity extends BaseActivity<RegisterPresenter> implements I
     Button btRegister;
 
     @Override
-    protected RegisterPresenter getPresenter() {
+    protected RegisterContract.IRegisterPresenter getPresenter() {
         return new RegisterPresenter(this);
     }
 

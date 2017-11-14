@@ -38,7 +38,6 @@ public class StepInPedometer extends StepMode {
     @Override
     public void onSensorChanged(SensorEvent event) {
         int liveStep = (int) event.values[0];
-
         if(sensorMode == 0){
             StepMode.CURRENT_STEP += liveStep;
             StepMode.CURRENT_STEP_HOUR += liveStep;
@@ -54,6 +53,7 @@ public class StepInPedometer extends StepMode {
             firstC.setTime(first);
             Calendar firstH = Calendar.getInstance();
             firstH.setTime(new Date(firstHourToday));
+            int newHourStep = 0;
             if(nowC.get(Calendar.DAY_OF_MONTH)!=firstC.get(Calendar.DAY_OF_MONTH)){
                 //如果日期刷新 步数记录更新
                 PerferenceUtils.getInstance(context).setIntValue(TODAY_STEP, liveStep);
@@ -66,10 +66,11 @@ public class StepInPedometer extends StepMode {
                 //如果小时刷新 步数记录 更新
                 PerferenceUtils.getInstance(context).setIntValue(HOUR_STEP, liveStep);
                 PerferenceUtils.getInstance(context).setLongValue("first_hour_in_today",currentTime);
-                hourStep = liveStep;
+                newHourStep = liveStep;
             }else {
                 hourStep = PerferenceUtils.getInstance(context).getIntValue(HOUR_STEP);
             }
+            Log.e(TAG,"hourStep"+hourStep);
             if(currentTime>lastTime&&currentTime - lastTime<10000&&StepMode.CURRENT_STEP<(liveStep-todayStep)){
                 StepMode.WALK_TIME +=currentTime-lastTime;
                 StepMode.WALK_TIME_HOUR += currentTime - lastTime;
@@ -78,6 +79,9 @@ public class StepInPedometer extends StepMode {
             lastTime = currentTime;
             StepMode.CURRENT_STEP_HOUR = liveStep - hourStep;
             StepMode.CURRENT_STEP = liveStep - todayStep;
+            if(newHourStep != 0 ){
+                hourStep = newHourStep;
+            }
         }
         Log.d(TAG,"STEP_TODAY is "+CURRENT_STEP+"\nSTEP_CURRENT_HOUR IS:"+CURRENT_STEP_HOUR);
         stepCountListener.onStepCount(StepMode.CURRENT_STEP);

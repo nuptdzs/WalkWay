@@ -2,14 +2,38 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.zk.walkwayapp">
 
+    <!-- 允许程序打开网络套接字 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 允许程序设置内置sd卡的写权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 允许程序获取网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 允许程序访问WiFi网络信息 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!-- 允许程序读写手机状态和身份 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 允许程序访问CellID或WiFi热点来获取粗略的位置 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
-        android:name=".WalkWayApplication"
+        android:name="com.zk.walkwayapp.WalkWayApplication"
         android:allowBackup="true"
         android:icon="@mipmap/plusbutton_gps_selected"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/plusbutton_gps_selected"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyApSsbBdHnbwIxaqrQz1SPrIYQfj_VgKSQ" />
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="4992a7a356cfaa870ebacd923dcdd53b" />
+
         <activity android:name=".view.activity.LanuchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,11 +41,48 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.activity.RegistActivity"/>
-        <activity android:name=".view.activity.FirstGuideActivity"/>
-        <activity android:name=".view.MainActivity" android:launchMode="singleInstance"/>
-        <activity android:name=".view.activity.LoginActivity"/>
-        <service android:name=".step.service.StepService"/>
+        <activity android:name=".view.activity.RegistActivity" />
+        <activity android:name=".view.activity.FirstGuideActivity" />
+        <activity
+            android:name=".view.MainActivity"
+            android:launchMode="singleInstance" />
+        <activity android:name=".view.activity.LoginActivity" />
+
+        <service android:name=".step.service.StepService" />
+
+        <activity android:name=".view.activity.UserInfoActivity" />
+        <activity android:name=".view.activity.GoalActivity" />
+        <activity android:name=".view.activity.PersonInfoActivity" />
+        <activity android:name=".view.activity.ChooseAddressActivity" />
+        <activity android:name=".view.activity.BusRouteDetailActivity" />
+        <activity android:name=".view.activity.DriveRouteDetailActivity" />
+        <activity android:name=".view.activity.WalkRouteDetailActivity" />
+        <activity android:name=".view.activity.MessageActivity" />
+
+        <provider
+            android:name="com.werb.pickphotoview.provider.PickProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/pick_file_paths" />
+        </provider>
+
+        <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name=".view.activity.TransitDirectionActivity" />
+
+        <service android:name="com.avos.avoscloud.PushService" />
+
+        <activity android:name=".view.activity.FeedBackActivity" />
+        <activity android:name=".view.activity.AboutAppActivity" />
     </application>
 
 </manifest>

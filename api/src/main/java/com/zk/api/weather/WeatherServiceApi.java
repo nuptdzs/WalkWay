@@ -2,18 +2,17 @@ package com.zk.api.weather;
 
 import com.zk.library.common.network.BaseUrl;
 
-import retrofit2.http.Field;
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
  * 天气API
  */
-@BaseUrl(path = "https://api.seniverse.com/v3/")
+@BaseUrl(path = "http://apis.baidu.com/heweather/")
 public interface WeatherServiceApi {
-    @GET("/weather/now.jsn")
-    Observable<Result<WeatherResult>> getWeatherInfo(@Field("key")String key,
-                                 @Field("location")String location,
-                                 @Field("language")String language);
+    @GET("pro/weather")
+    Observable<Result<WeatherResult>> getWeatherInfo(
+                                 @Query("city")String location);
 
 }

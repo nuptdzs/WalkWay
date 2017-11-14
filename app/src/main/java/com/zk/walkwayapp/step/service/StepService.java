@@ -110,7 +110,7 @@ public class StepService extends Service implements StepMode.StepCountListener {
     public void onStepCount(int stepCount) {
         hasStepChanaged = true;
         Log.e("step","step count is "+stepCount);
-        updateNotification("Today's Step is" + stepCount + " stay activing");
+        updateNotification("Today's Step is " + stepCount);
     }
 
     private static final int MSG_FROM_CLIENT = 90;
@@ -384,9 +384,12 @@ public class StepService extends Service implements StepMode.StepCountListener {
     private double getDistance(int stepCount) {
         double distance = 0;
         AVUser user = AVUser.getCurrentUser();
+        if (user == null){
+            user = new AVUser();
+        }
         double height  = user.getDouble("height");
         double weight  = user.getDouble("weight");
-        boolean sex = user.getBoolean("sex");
+        int sex = user.getInt("sex");
         distance = getDistance(sex,stepCount,height);
         return distance;
     }
@@ -399,12 +402,12 @@ public class StepService extends Service implements StepMode.StepCountListener {
      * 男 0 女1
      * @return 长度 单位M
      */
-    public double getDistance(boolean sex,int stepCount,double height){
+    public double getDistance(int sex,int stepCount,double height){
         if(height==0){
             height = 170;
         }
         double distance;
-        if(!sex){
+        if(sex==0){
             distance = stepCount*height*0.45/100;
         }else {
             distance = stepCount*height*0.45*0.9/100;
@@ -420,9 +423,12 @@ public class StepService extends Service implements StepMode.StepCountListener {
      */
     public int getCalorie(int runCount,int walkCount){
         AVUser user = AVUser.getCurrentUser();
+        if (user == null){
+            return 0;
+        }
         int height  = user.getInt("height");
         int weight  = user.getInt("weight");
-        boolean sex = user.getBoolean("sex");
+        int sex = user.getInt("sex");
         if (height==0)height=170;
         if (weight==0)weight=60;
         return (int) getCalorie(sex,height,weight,0,runCount,walkCount);
@@ -449,9 +455,9 @@ public class StepService extends Service implements StepMode.StepCountListener {
 //        return calorie;
     }
 
-    private long getCalorie(boolean sex, int height, int weight, int age, int runsteps, int walksteps) {
+    private long getCalorie(int sex, int height, int weight, int age, int runsteps, int walksteps) {
         long calorie;
-        if(sex) {
+        if(sex ==0) {
             calorie = (long)((double)((long)walksteps * 40L * (long)weight * (long)height / 170L / 60L) + (double)runsteps * 1.3D * 40.0D * (double)weight * (double)height / 170.0D / 60.0D);
         } else {
             calorie = (long)(((double)((long)walksteps * 40L * (long)weight * (long)height / 160L / 60L) + (double)runsteps * 1.3D * 40.0D * (double)weight * (double)height / 160.0D / 60.0D) * 0.9D);

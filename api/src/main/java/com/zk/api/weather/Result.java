@@ -1,11 +1,14 @@
 package com.zk.api.weather;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 public class Result<T> {
     private String status;
     private String status_code;
-    private ArrayList<T> results;
+    @SerializedName("HeWeather data service 3.0")
+    private ArrayList<T> HeWeather5;
     public String getStatus() {
         return status;
     }
@@ -22,11 +25,20 @@ public class Result<T> {
         this.status_code = status_code;
     }
 
-    public ArrayList<T> getResults() {
-        return results;
+    public ArrayList<T> getHeWeather5() {
+        return HeWeather5;
     }
 
-    public void setResults(ArrayList<T> results) {
-        this.results = results;
+    public void setHeWeather5(ArrayList<T> heWeather5) {
+        HeWeather5 = heWeather5;
+    }
+
+    @Override
+    public String toString() {
+        return "Result{" +
+                "status='" + status + '\'' +
+                ", status_code='" + status_code + '\'' +
+                ", HeWeather5=" + HeWeather5 +
+                '}';
     }
 }

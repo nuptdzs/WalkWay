@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVUser;
+import com.zk.library.common.common.PermissionUtils;
 import com.zk.library.common.mvp.BaseActivity;
 import com.zk.library.common.mvp.BasePresenter;
 import com.zk.library.common.mvp.ContentView;
@@ -202,9 +204,15 @@ public class LanuchActivity extends BaseActivity {
 
     @Override
     protected void addEvent() {
+        PermissionUtils.requestMultiPermissions(this, new PermissionUtils.PermissionGrant() {
+            @Override
+            public void onPermissionGranted(int requestCode) {
+                Log.e("permission","code"+requestCode);
+            }
+        });
         count = 3;
         time = 0;
-        adhandler.sendEmptyMessageDelayed(1101, 2500);
+        adhandler.sendEmptyMessageDelayed(1101, 1000);
     }
 
     @Override
